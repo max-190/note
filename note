@@ -6,7 +6,23 @@ import json
 notes_file = "notes.json"
 
 def initialise_notes() -> dict:
-    return {'groups': [], 'other': []}
+    return {"groups": [], "other": []}
+
+def print_notes(notes: dict) -> None:
+    if notes["groups"] == [] and notes["other"] == []:
+        print("No notes to show.")
+        return
+    
+    for i, group in enumerate(notes["groups"]):
+        print(f"[{i + 1}]: {group['name']}")
+        for j, note in enumerate(group["notes"]):
+            print(f"\t[{i + 1}.{j + 1}]: " + note)
+    
+    if notes["other"] != []:
+        print("\nOther notes:")
+        for i, note in enumerate(notes["other"]):
+            print(f"\t[{i + 1}]: " + note)
+
  
 def main() -> None:
     note_data = {}
@@ -19,7 +35,8 @@ def main() -> None:
         with open(path.join(script_dir, notes_file), 'r') as f:
             note_data = json.load(f)
     
-    notes_json = json.dumps(note_data, indent=4)
+    print_notes(note_data)
+    notes_json = json.dumps(note_data, indent=2)
     # TODO: TACTOU maybe fix
     with open(path.join(script_dir, notes_file), 'w') as f:
         f.write(notes_json)
