@@ -21,7 +21,7 @@ def print_notes(notes: dict) -> None:
     if notes["other"] != []:
         print("\nOther notes:")
         for i, note in enumerate(notes["other"]):
-            print(f"\t[{i + 1}]: " + note)
+            print(f"\t[{len(notes['groups']) + 1}.{i + 1}]: " + note)
 
  
 def main() -> None:
