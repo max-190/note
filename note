@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 from sys import argv
 from os import path, listdir
 import json
@@ -35,7 +36,38 @@ def main() -> None:
         with open(path.join(script_dir, notes_file), 'r') as f:
             note_data = json.load(f)
     
-    print_notes(note_data)
+    if len(argv) == 1:
+        print_notes(note_data)
+        return
+    
+    if argv[1] == "group":
+        if len(argv) == 2:
+            raise Exception("No name for group added.")
+        
+        note_data["groups"].append(" ".join(argv[2:]))
+    
+    elif isinstance(argv[1], float):
+        index = argv[1].split('.')
+        if len(index) != 2:
+            raise Exception("Index contains too few or too many things.")
+        # TODO: fix for other notes, +1 gone and separate case for other
+        if index[0].startswith('-'):
+            if int(index[0][1:]) < 1 or int(index[0]) > len(note_data["groups"]) + 1:
+                raise Exception("No valid index for group.")
+            
+            if int(index[1]) < 1 or int(index[1]) > len(note_data["groups"][int(index[1]) - 1]):
+                raise Exception("No valid index for note.")
+            
+            note_data["groups"][int(index[0][1:]) - 1].pop([int(index[1])])
+        
+        else:
+            ...
+            
+            
+
+
+
+
     notes_json = json.dumps(note_data, indent=2)
     # TODO: TACTOU maybe fix
     with open(path.join(script_dir, notes_file), 'w') as f:
