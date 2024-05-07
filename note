@@ -23,6 +23,20 @@ def print_group(notes: dict, group_index: int) -> None:
         for i, note in enumerate(notes["groups"][group_index]["notes"]):
             print(f"\t[{group_index}.{i + 1}]: " + note)
 
+def print_just_groups(notes: dict) -> None:
+    note_counter = 0
+    for i, group in enumerate(notes["groups"][1:]):
+        num_notes = len(group['notes'])
+        note_counter += num_notes
+        print(f"[{i}]: {group['name']}, ".ljust(30, " ") + f"with {str(num_notes)} notes.")
+
+    other_notes_count = len(notes['groups'][0]['notes'])
+    if (other_notes_count > 0):
+        print("[0]: Other notes, ".ljust(30, " ") + f"with {str(other_notes_count)} notes.")
+    
+    print(f"In total: {str(note_counter)} note(s) in {str(len(notes['groups']))} group(s), with {str(other_notes_count)} other note(s).")
+
+
 def print_notes(notes: dict) -> None:
     if len(notes["groups"]) == 1 and notes["groups"][0]["notes"] == []:
         print("No notes to show.")
@@ -59,6 +73,10 @@ def main() -> None:
             raise Exception("No name for group added.")
         
         note_data["groups"].append(initialise_group(" ".join(argv[2:])))
+    
+    elif argv[1] == "groups": # TODO: maybe too similar?
+        print_just_groups(note_data)
+        return
     
     elif argv[1] == "rm":
         if len(argv) != 3:

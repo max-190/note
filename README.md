@@ -9,6 +9,9 @@ Clone git repository and copy the `note` file to `~/.local/bin`. Use
 To get a list of all currently stored notes, use the command `note` without
 any arguments.
 
+To get a list of all groups with the amount of notes in each one, use the
+command `note groups`.
+
 To only get a list of notes in a certain group, use `note [group_name]`, where
 `[group_name]` is the name of an already existing group.
 
