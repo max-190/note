@@ -9,20 +9,32 @@ notes_file = "notes.json"
 def initialise_notes() -> dict:
     return {"groups": [], "other": []}
 
+def initialise_group(name: str) -> dict:
+    return {"name": name, "notes": []}
+
+def print_group(notes: dict, group_index: int) -> None:
+    if group_index == len(notes["groups"]) + 1:
+        print("Other notes:")
+        for i, note in enumerate(notes["other"]):
+            print(f"\t[{len(notes['groups']) + 1}.{i + 1}]: " + note)
+    
+    elif group_index <= len(notes["groups"]):
+        print(f"[{group_index}]: {notes['groups'][group_index - 1]['name']}")
+        for i, note in enumerate(notes["groups"][group_index - 1]["notes"]):
+            print(f"\t[{group_index}.{i + 1}]: " + note)
+
 def print_notes(notes: dict) -> None:
     if notes["groups"] == [] and notes["other"] == []:
         print("No notes to show.")
         return
     
     for i, group in enumerate(notes["groups"]):
-        print(f"[{i + 1}]: {group['name']}")
-        for j, note in enumerate(group["notes"]):
-            print(f"\t[{i + 1}.{j + 1}]: " + note)
+        print_group(notes, i + 1)
+
+    print()
     
     if notes["other"] != []:
-        print("\nOther notes:")
-        for i, note in enumerate(notes["other"]):
-            print(f"\t[{len(notes['groups']) + 1}.{i + 1}]: " + note)
+        print_group(notes, len(notes["groups"]) + 1)
 
  
 def main() -> None:
@@ -44,24 +56,53 @@ def main() -> None:
         if len(argv) == 2:
             raise Exception("No name for group added.")
         
-        note_data["groups"].append(" ".join(argv[2:]))
+        note_data["groups"].append(initialise_group(" ".join(argv[2:])))
     
-    elif isinstance(argv[1], float):
-        index = argv[1].split('.')
-        if len(index) != 2:
-            raise Exception("Index contains too few or too many things.")
-        # TODO: fix for other notes, +1 gone and separate case for other
-        if index[0].startswith('-'):
-            if int(index[0][1:]) < 1 or int(index[0]) > len(note_data["groups"]) + 1:
-                raise Exception("No valid index for group.")
-            
-            if int(index[1]) < 1 or int(index[1]) > len(note_data["groups"][int(index[1]) - 1]):
-                raise Exception("No valid index for note.")
-            
-            note_data["groups"][int(index[0][1:]) - 1].pop([int(index[1])])
+
+    elif argv[1] == "rm":
+        if len(argv) != 3:
+            raise Exception("Wrong amount of arguments.")
         
+        index = argv[2].split('.')
+
+        if len(index) == 1:
+            i = int(index[0])
+            if i < 1 or i > len(note_data["groups"]) + 1:
+                raise Exception("Invalid group index.")
+            
+            if i == len(note_data["groups"]) + 1:
+                note_data["other"] = []
+            
+            else:
+                note_data["groups"].pop(i - 1)
+        elif len(index) == 2:
+            i, j = int(index[0]), int(index[1])
+            if i < 1 or i > len(note_data["groups"]) + 1:
+                raise Exception("Invalid group index.")
+            
+            if j < 1 or (i == len(note_data["groups"]) + 1 and j > len(note_data["other"])) or (i <= len(note_data["groups"]) and j > len(note_data["groups"][i - 1])):
+                raise Exception("Invalid note index.")
+            
+            if i == len(note_data["groups"]) + 1:
+                note_data["other"].pop(j - 1)
+            
+            else:
+                note_data["groups"][i - 1]["notes"].pop(j - 1)
         else:
-            ...
+            raise Exception("Invalid index.")
+
+    elif argv[1].isnumeric():
+        if len(argv) == 2:
+            print_group(note_data, int(argv[1]))
+
+        if (int(argv[1]) < 1 or int(argv[1]) > len(note_data["groups"])):
+            raise Exception("Invalid group index.")
+        
+        note_data["groups"][int(argv[1]) - 1]["notes"].append(" ".join(argv[2:]))
+
+
+    else:
+        note_data["other"].append(" ".join(argv[1:]))
             
             
 
@@ -76,7 +117,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    try:
+    # try:
         main()
-    except Exception as e:
-        print(str(e))
+    # except Exception as e:
+    #     print(str(e))
