@@ -19,3 +19,8 @@ To add a new note, use `note [note_text]`, where `[note_text]` contains the stri
 To remove a note, use `note rm [index]`, where `[index]` specifies the number given to a note. For example, use `note rm 2.3` to remove the third note from the second group.
 
 To remove an entire group, use `note -[index]`, where `[index]` specifies the number given to a group.
+
+## TODO
+- Change the way *other notes* are stored, so that checks are easier.
+- Add check to verify deleting groups (or individual notes).
+- Add config to json to select preferences, such as bypassing checks.
