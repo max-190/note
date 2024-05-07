@@ -42,7 +42,7 @@ def main() -> None:
     script_dir = path.dirname(path.realpath(__file__))
     if notes_file not in listdir(script_dir):
         print("'notes.json' not found, initialising Note...")
-        open(notes_file, 'x')
+        open(path.join(script_dir, notes_file), 'x')
         note_data = initialise_notes()
     else:
         with open(path.join(script_dir, notes_file), 'r') as f:
