@@ -31,7 +31,8 @@ def print_notes(notes: dict) -> None:
     for i, group in enumerate(notes["groups"]):
         print_group(notes, i + 1)
 
-    print()
+    if notes["groups"] != []:
+        print()
     
     if notes["other"] != []:
         print_group(notes, len(notes["groups"]) + 1)
@@ -42,8 +43,9 @@ def main() -> None:
     script_dir = path.dirname(path.realpath(__file__))
     if notes_file not in listdir(script_dir):
         print("'notes.json' not found, initialising Note...")
-        open(path.join(script_dir, notes_file), 'x')
-        note_data = initialise_notes()
+        with open(path.join(script_dir, notes_file), 'x') as f:
+            f.write(json.dumps(initialise_notes(), indent=2))
+        return
     else:
         with open(path.join(script_dir, notes_file), 'r') as f:
             note_data = json.load(f)
@@ -104,11 +106,7 @@ def main() -> None:
     else:
         note_data["other"].append(" ".join(argv[1:]))
             
-            
-
-
-
-
+    
     notes_json = json.dumps(note_data, indent=2)
     # TODO: TACTOU maybe fix
     with open(path.join(script_dir, notes_file), 'w') as f:
