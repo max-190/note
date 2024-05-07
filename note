@@ -7,35 +7,35 @@ import json
 notes_file = "notes.json"
 
 def initialise_notes() -> dict:
-    return {"groups": [], "other": []}
+    return {"groups": [{"name": "other", "notes": []}]}
 
 def initialise_group(name: str) -> dict:
     return {"name": name, "notes": []}
 
 def print_group(notes: dict, group_index: int) -> None:
-    if group_index == len(notes["groups"]) + 1:
+    if group_index == 0:
         print("Other notes:")
-        for i, note in enumerate(notes["other"]):
-            print(f"\t[{len(notes['groups']) + 1}.{i + 1}]: " + note)
+        for i, note in enumerate(notes["groups"][0]["notes"]):
+            print(f"\t[0.{i + 1}]: " + note)
     
     elif group_index <= len(notes["groups"]):
-        print(f"[{group_index}]: {notes['groups'][group_index - 1]['name']}")
-        for i, note in enumerate(notes["groups"][group_index - 1]["notes"]):
+        print(f"[{group_index}]: {notes['groups'][group_index]['name']}")
+        for i, note in enumerate(notes["groups"][group_index]["notes"]):
             print(f"\t[{group_index}.{i + 1}]: " + note)
 
 def print_notes(notes: dict) -> None:
-    if notes["groups"] == [] and notes["other"] == []:
+    if len(notes["groups"]) == 1 and notes["groups"][0]["notes"] == []:
         print("No notes to show.")
         return
     
-    for i, group in enumerate(notes["groups"]):
-        print_group(notes, i + 1)
+    for i in range(1, len(notes["groups"])):
+        print_group(notes, i)
 
-    if notes["groups"] != []:
+    if len(notes["groups"]) != 1:
         print()
     
-    if notes["other"] != []:
-        print_group(notes, len(notes["groups"]) + 1)
+    if notes["groups"][0]["notes"] != []:
+        print_group(notes, 0)
 
  
 def main() -> None:
@@ -60,7 +60,6 @@ def main() -> None:
         
         note_data["groups"].append(initialise_group(" ".join(argv[2:])))
     
-
     elif argv[1] == "rm":
         if len(argv) != 3:
             raise Exception("Wrong amount of arguments.")
@@ -69,27 +68,25 @@ def main() -> None:
 
         if len(index) == 1:
             i = int(index[0])
-            if i < 1 or i > len(note_data["groups"]) + 1:
+            if i < 0 or i > len(note_data["groups"]) - 1:
                 raise Exception("Invalid group index.")
             
-            if i == len(note_data["groups"]) + 1:
-                note_data["other"] = []
+            if i == 0:
+                note_data["groups"][0]["notes"] = []
             
             else:
-                note_data["groups"].pop(i - 1)
+                note_data["groups"].pop(i)
+        
         elif len(index) == 2:
             i, j = int(index[0]), int(index[1])
-            if i < 1 or i > len(note_data["groups"]) + 1:
+            if i < 0 or i > len(note_data["groups"]) - 1:
                 raise Exception("Invalid group index.")
             
-            if j < 1 or (i == len(note_data["groups"]) + 1 and j > len(note_data["other"])) or (i <= len(note_data["groups"]) and j > len(note_data["groups"][i - 1])):
+            if j < 1 or j > len(note_data["groups"][i]["notes"]):
                 raise Exception("Invalid note index.")
             
-            if i == len(note_data["groups"]) + 1:
-                note_data["other"].pop(j - 1)
+            note_data["groups"][i]["notes"].pop(j - 1)
             
-            else:
-                note_data["groups"][i - 1]["notes"].pop(j - 1)
         else:
             raise Exception("Invalid index.")
 
@@ -97,14 +94,14 @@ def main() -> None:
         if len(argv) == 2:
             print_group(note_data, int(argv[1]))
 
-        if (int(argv[1]) < 1 or int(argv[1]) > len(note_data["groups"])):
+        if int(argv[1]) < 0 or int(argv[1]) > len(note_data["groups"]) - 1:
             raise Exception("Invalid group index.")
         
-        note_data["groups"][int(argv[1]) - 1]["notes"].append(" ".join(argv[2:]))
+        note_data["groups"][int(argv[1])]["notes"].append(" ".join(argv[2:]))
 
 
     else:
-        note_data["other"].append(" ".join(argv[1:]))
+        note_data["groups"][0]["notes"].append(" ".join(argv[1:]))
             
     
     notes_json = json.dumps(note_data, indent=2)
@@ -115,7 +112,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    # try:
+    try:
         main()
-    # except Exception as e:
-    #     print(str(e))
+    except Exception as e:
+        print(str(e))
