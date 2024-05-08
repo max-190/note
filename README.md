@@ -24,7 +24,7 @@ To remove a group, use `note rm [group_index]`, where `[group_index]` is the num
 Note that using this command on *other notes*, it is not removed; the list of notes is simply emptied.
 
 ### Adding notes
-To add a note to an existing group, use `note [group_index] [message]`, where `group_index` is the number of the group and `[message]` the note to be added to the group. The note need not be enclosed in single or double quotes.
+To add a note to an existing group, use `note [group_index] [message]`, where `group_index` is the number of the group and `[message]` the note to be added to the group. The note need not be enclosed in single or double quotes, however, special characters must be escaped (precede with `\`).
 
 By default, a note is appended to *other notes*, a list of notes that are not linked to any group. To do this, use `note [message]`, so without `[group_index]`.
 
