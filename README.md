@@ -6,24 +6,33 @@ Clone git repository and copy the `note` file to `~/.local/bin`. Use
 `chmod +x note` to give the program execution rights.
 
 ## Usage
-To get a list of all currently stored notes, use the command `note` without
-any arguments.
+### Retrieving notes
+There are multiple ways to display the notes currently stored in the application.
 
-To get a list of all groups with the amount of notes in each one, use the
-command `note groups`.
+Use `note`, without any arguments, to display a list of all groups with its corresponding notes.
 
-To only get a list of notes in a certain group, use `note [group_name]`, where
-`[group_name]` is the name of an already existing group.
+Use `note [index]`, where `[index]` is the number given to a group, to display the notes only in the aforementioned group.
 
-To add a group, use `note group [group_name]`, where `[group_name]` is the desired name of the new group. 
+Use `note groups` to show a list of only the groups, and the number of notes contained within each group.
 
-To add a new note, use `note [note_text]`, where `[note_text]` contains the string to be added. By default, a note is added to *other notes*. To add it to a group, use `note [index] [note_text]`, where `[index]` specifies the number given to a group when notes are printed.
+### Adding groups
+To add a new group to the list of groups, use `note group [group_name]`. The group will be appended to the end of the list.
 
-To remove a note, use `note rm [index]`, where `[index]` specifies the number given to a note. For example, use `note rm 2.3` to remove the third note from the second group.
+### Removing groups
+To remove a group, use `note rm [group_index]`, where `[group_index]` is the number given to the group. This will remove the group with all its notes. This command will prompt the user with a warning, since this action cannot be undone.
 
-To remove an entire group, use `note -[index]`, where `[index]` specifies the number given to a group.
+Note that using this command on *other notes*, it is not removed; the list of notes is simply emptied.
+
+### Adding notes
+To add a note to an existing group, use `note [group_index] [message]`, where `group_index` is the number of the group and `[message]` the note to be added to the group. The note need not be enclosed in single or double quotes.
+
+By default, a note is appended to *other notes*, a list of notes that are not linked to any group. To do this, use `note [message]`, so without `[group_index]`.
+
+### Removing notes
+To remove a note, use `note rm [group_index].[note_index]`, where the specified note may look like `2.3`. This example means that the third note will be removed from the second group. Note that a group will not be removed when all notes are individually removed from the group.
+
+This action will **not** prompt the user with a warning.
 
 ## TODO
 - Make better parser
-- Add check to verify deleting groups (or individual notes).
 - Add config to json to select preferences, such as bypassing checks.
