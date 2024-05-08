@@ -30,7 +30,7 @@ def initialise_group(name: str) -> dict:
 
 def print_group(notes: dict, group_index: int) -> None:
     if group_index == 0:
-        print("Other notes:")
+        print("[0]: Other notes:")
         for i, note in enumerate(notes["groups"][0]["notes"]):
             print(f"\t[0.{i + 1}]: " + note)
     
