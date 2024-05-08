@@ -4,6 +4,18 @@ from sys import argv
 from os import path, listdir
 import json
 
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
 notes_file = "notes.json"
 
 def initialise_notes() -> dict:
@@ -90,11 +102,23 @@ def main() -> None:
             if i < 0 or i > len(note_data["groups"]) - 1:
                 raise Exception("Invalid group index.")
             
-            if i == 0:
-                note_data["groups"][0]["notes"] = []
-            
-            else:
-                note_data["groups"].pop(i)
+            print(bcolors.WARNING + "WARNING: " + bcolors.ENDC + f"you are about to delete '{note_data['groups'][i]['name']}', with {str(len(note_data['groups'][i]['notes']))} note(s). Are you sure you want to proceed?")
+            valid_input = False
+            while not valid_input:
+                print("(" + bcolors.FAIL + "yes" + bcolors.ENDC + "/" + bcolors.OKGREEN + "no" + bcolors.ENDC + "): ", end="")
+                text = input()
+                if text.lower() in ["yes", "y", "1"]:
+                    if i == 0:
+                        note_data["groups"][0]["notes"] = []
+                    
+                    else:
+                        note_data["groups"].pop(i)
+                
+                    valid_input = True
+                
+                elif text.lower() in ["no", "n", "0"]:
+                    valid_input = True
+        
         
         elif len(index) == 2:
             i, j = int(index[0]), int(index[1])
