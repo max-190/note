@@ -24,5 +24,6 @@ To remove a note, use `note rm [index]`, where `[index]` specifies the number gi
 To remove an entire group, use `note -[index]`, where `[index]` specifies the number given to a group.
 
 ## TODO
+- Make better parser
 - Add check to verify deleting groups (or individual notes).
 - Add config to json to select preferences, such as bypassing checks.

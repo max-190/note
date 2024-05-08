@@ -18,10 +18,11 @@ def print_group(notes: dict, group_index: int) -> None:
         for i, note in enumerate(notes["groups"][0]["notes"]):
             print(f"\t[0.{i + 1}]: " + note)
     
-    elif group_index <= len(notes["groups"]):
+    elif group_index <= len(notes["groups"]) - 1:
         print(f"[{group_index}]: {notes['groups'][group_index]['name']}")
         for i, note in enumerate(notes["groups"][group_index]["notes"]):
             print(f"\t[{group_index}.{i + 1}]: " + note)
+
 
 def print_just_groups(notes: dict) -> None:
     note_counter = 0
@@ -34,7 +35,7 @@ def print_just_groups(notes: dict) -> None:
     if (other_notes_count > 0):
         print("[0]: Other notes, ".ljust(30, " ") + f"with {str(other_notes_count)} notes.")
     
-    print(f"In total: {str(note_counter)} note(s) in {str(len(notes['groups']))} group(s), with {str(other_notes_count)} other note(s).")
+    print(f"In total: {str(note_counter)} note(s) in {str(len(notes['groups']) - 1)} group(s), with {str(other_notes_count)} other note(s).")
 
 
 def print_notes(notes: dict) -> None:
@@ -74,7 +75,7 @@ def main() -> None:
         
         note_data["groups"].append(initialise_group(" ".join(argv[2:])))
     
-    elif argv[1] == "groups": # TODO: maybe too similar?
+    elif argv[1] == "groups": # TODO: maybe too similar to "group"?
         print_just_groups(note_data)
         return
     
@@ -111,6 +112,7 @@ def main() -> None:
     elif argv[1].isnumeric():
         if len(argv) == 2:
             print_group(note_data, int(argv[1]))
+            return
 
         if int(argv[1]) < 0 or int(argv[1]) > len(note_data["groups"]) - 1:
             raise Exception("Invalid group index.")
