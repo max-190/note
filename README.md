@@ -36,3 +36,5 @@ This action will **not** prompt the user with a warning.
 ## TODO
 - Make better parser
 - Add config to json to select preferences, such as bypassing checks.
+
+- Overhaul using argparse
